@@ -18,7 +18,7 @@ services:
     networks:
       - sentry
     volumes:
-      - sentry-redis-data:/data
+      - './data/sentry/redis/data:/data'
   
   sentry-postgres:
     image: postgres:latest
@@ -34,7 +34,7 @@ services:
     networks:
       - sentry
     volumes:
-      - sentry-postgres:/var/lib/postgresql/data
+      - './data/sentry/postgres:/var/lib/postgresql/data'
 
   sentry-base:
     image: sentry:latest
@@ -51,7 +51,7 @@ services:
     networks:
       - sentry
     volumes:
-      - sentry-sentry:/var/lib/sentry/files
+      - './data/sentry/sentry:/var/lib/sentry/files'
     labels:
       - traefik.http.routers.sentry.rule=Host("sentry.${DOMAIN}")
       - traefik.http.routers.sentry.entrypoints=https
@@ -73,7 +73,7 @@ services:
     networks:
       - sentry
     volumes:
-      - sentry-sentry:/var/lib/sentry/files
+      - './data/sentry/sentry:/var/lib/sentry/files'
 
   sentry-worker:
     image: sentry:latest
@@ -89,12 +89,7 @@ services:
     networks:
       - sentry
     volumes:
-      - sentry-sentry:/var/lib/sentry/files
-
-volumes:
-  sentry-redis-data:
-  sentry-postgres:
-  sentry-sentry:
+      - './data/sentry/sentry:/var/lib/sentry/files'
 
 networks:
   sentry:
