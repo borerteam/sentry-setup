@@ -1,13 +1,17 @@
 stages:
   - deploy
 
+variables:
+  ENV_FILE: .env.local
+
 deploy:
   stage: deploy
   image: docker/compose
   tags:
     - mvbureev
   before_script:
-    - source $ENV_SENTRY_CI_FILE | true
+    - echo -e $ENV_SENTRY_CI_FILE > $ENV_FILE | true
+    - source $ENV_FILE | true
     - docker-compose ps
     - docker info
     - docker-compose version
