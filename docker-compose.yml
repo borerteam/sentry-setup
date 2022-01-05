@@ -82,7 +82,9 @@ services:
       - sentry/sentry:/var/lib/sentry/files
 
 volumes:
-  sentry:
+  sentry/redis/data:
+  sentry/postgres:
+  sentry/sentry:
 
 networks:
   sentry:
