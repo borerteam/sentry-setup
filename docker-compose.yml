@@ -53,6 +53,7 @@ services:
     volumes:
       - './data/sentry/sentry:/var/lib/sentry/files'
     labels:
+      - traefik.http.services.sentry.loadbalancer.server.port=9000
       - traefik.http.routers.sentry.rule=Host("sentry.${DOMAIN}")
       - traefik.http.routers.sentry.entrypoints=https
       - traefik.http.routers.sentry.tls=true
