@@ -7,15 +7,12 @@ deploy:
   tags:
     - mvbureev
   before_script:
-    - cp $ENV_SENTRY_CI_FILE ./.env
-    - source ./.env | true
-    - cat ./.env
+    - source $ENV_SENTRY_CI_FILE  | true
     - docker-compose ps
     - docker info
     - docker-compose version
-    - docker-compose --env-file ./.env config
   script:
-    - docker-compose run --rm sentry-base upgrade
+    # - docker-compose run --rm sentry-base upgrade
     - docker-compose up -d
   only:
     - main
