@@ -7,7 +7,7 @@ deploy:
   tags:
     - mvbureev
   before_script:
-    # - cp $ENV_SENTRY_CI_FILE ./.env
+    - cp $ENV_SENTRY_CI_FILE ./.env
     # - source ./.env | true
     - docker-compose ps
     - docker-compose version
