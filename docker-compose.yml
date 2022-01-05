@@ -1,6 +1,13 @@
-version: '3.7'
+version: "3.7"
 
 services:
+  # OPTIONAL: If you want to get emails from sentry include this docker container
+  # smtp:
+  #   image: 'tianon/exim4:latest'
+  #   environment:
+  #     GMAIL_USER: 'GMAIL_USER@gmail.com'
+  #     GMAIL_PASSWORD: 'GMAIL_PASSWORD_OR_GMAIL_APP_PASSWORD'
+
   sentry-redis:
     image: redis:latest
     container_name: sentry-redis
@@ -9,7 +16,7 @@ services:
     networks:
       - sentry
     volumes:
-      - './data/sentry/redis/data:/data'
+      - sentry/redis/data:/data
   
   sentry-postgres:
     image: postgres:latest
@@ -17,38 +24,40 @@ services:
     hostname: sentry-postgres
     restart: always
     environment:
-      POSTGRES_USER: sentry
-      POSTGRES_PASSWORD: 89PsZXyRStOT2
-      POSTGRES_DB: sentry
+      POSTGRES_USER: ${SENTRY_DB_USER}
+      POSTGRES_PASSWORD: ${SENTRY_DB_PASSWORD}
+      POSTGRES_DB: ${SENTRY_DB_NAME}
     networks:
       - sentry
     volumes:
-      - './data/sentry/postgres:/var/lib/postgresql/data'
+      - sentry/postgres:/var/lib/postgresql/data
 
   sentry-base:
     image: sentry:latest
     container_name: sentry-base
     hostname: sentry-base
     restart: always
-    ports:
-      - '9000:9000'
-    env_file:
-      - .env
+    expose:
+      - 9000
     depends_on:
       - sentry-redis
       - sentry-postgres
     networks:
       - sentry
     volumes:
-      - './data/sentry/sentry:/var/lib/sentry/files'
+      - sentry/sentry:/var/lib/sentry/files
+    labels:
+      - traefik.http.routers.sentry.rule=Host("sentry.${DOMAIN}")
+      - traefik.http.routers.sentry.entrypoints=https
+      - traefik.http.routers.sentry.tls=true
+      - traefik.http.routers.sentry.tls.certresolver=${CERT_RESOLVER}
+      - traefik.docker.network=proxy
 
   sentry-cron:
     image: sentry:latest
     container_name: sentry-cron
     hostname: sentry-cron
     restart: always
-    env_file:
-      - .env
     depends_on:
       - sentry-redis
       - sentry-postgres
@@ -56,15 +65,13 @@ services:
     networks:
       - sentry
     volumes:
-      - './data/sentry/sentry:/var/lib/sentry/files'
+      - sentry/sentry:/var/lib/sentry/files
 
   sentry-worker:
     image: sentry:latest
     container_name: sentry-worker
     hostname: sentry-worker
     restart: always
-    env_file:
-      - .env
     depends_on:
       - sentry-redis
       - sentry-postgres
@@ -72,7 +79,10 @@ services:
     networks:
       - sentry
     volumes:
-      - './data/sentry/sentry:/var/lib/sentry/files'
+      - sentry/sentry:/var/lib/sentry/files
+
+volumes:
+  sentry:
 
 networks:
   sentry:

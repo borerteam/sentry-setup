@@ -1,0 +1,19 @@
+stages:
+  - deploy
+
+deploy:
+  stage: deploy
+  image: docker/compose
+  tags:
+    - mvbureev
+  before_script:
+    - source $ENV_SENTRY_CI_FILE | true
+    - docker-compose ps
+    - docker info
+    - docker-compose version
+    - docker-compose config
+  script:
+    - docker-compose run --rm sentry-base upgrade
+    - docker-compose up -d
+  only:
+    - main
