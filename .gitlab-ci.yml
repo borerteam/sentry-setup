@@ -9,6 +9,7 @@ deploy:
   before_script:
     - cp $ENV_SENTRY_CI_FILE ./.env
     - source ./.env | true
+    - cat ./.env
     - docker-compose ps
     - docker info
     - docker-compose version
