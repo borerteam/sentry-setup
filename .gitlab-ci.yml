@@ -11,8 +11,8 @@ deploy:
     - source ./.env | true
     - cat ./.env
     - docker-compose ps
-    - docker info
     - docker-compose version
+    - docker info
   script:
     # - docker-compose run --rm sentry-base upgrade
     - docker-compose up -d
