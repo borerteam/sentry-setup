@@ -2,7 +2,7 @@ stages:
   - deploy
 
 variables:
-  ENV_FILE: .env.local
+  ENV_FILE: .env
 
 deploy:
   stage: deploy
@@ -12,10 +12,11 @@ deploy:
   before_script:
     - echo -e $ENV_SENTRY_CI_FILE > $ENV_FILE | true
     - source $ENV_FILE | true
+    - cat $ENV_FILE
     - docker-compose ps
     - docker info
     - docker-compose version
-    - docker-compose config
+    - docker-compose --env-file $ENV_FILE config
   script:
     - docker-compose run --rm sentry-base upgrade
     - docker-compose up -d
