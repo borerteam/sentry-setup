@@ -26,9 +26,9 @@ x-defaults: &defaults
     - SENTRY_ADMIN_PASSWORD=${SENTRY_ADMIN_PASSWORD}
   volumes:
     - sentry-data:/var/lib/sentry/files
-    networks:
-      - sentry
-      - proxy
+  networks:
+    - sentry
+    - proxy
 
 services:
   sentry-redis:
