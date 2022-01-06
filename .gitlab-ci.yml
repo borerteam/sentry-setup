@@ -13,7 +13,7 @@ deploy:
     - docker-compose version
     - docker info
   script:
-    - docker-compose run --rm sentry-web upgrade
+    # - docker-compose run --rm sentry-web upgrade
     - docker-compose up -d
   only:
     - main
