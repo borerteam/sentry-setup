@@ -5,7 +5,7 @@ deploy:
   stage: deploy
   image: docker/compose
   tags:
-    - portal-1
+    - disabled
   before_script:
     - cp $ENV_SENTRY_CI_FILE ./.env
     - source ./.env | true
