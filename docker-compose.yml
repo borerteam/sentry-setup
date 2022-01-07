@@ -75,6 +75,7 @@ services:
       - traefik.http.routers.sentry.tls=true
       - traefik.http.routers.sentry.tls.certresolver=${CERT_RESOLVER}
       - traefik.docker.network=proxy
+      - traefik.http.routers.registry.middlewares=traefik-compress
 
   sentry-cron:
     <<: *defaults
